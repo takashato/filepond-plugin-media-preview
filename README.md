@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nielsboogaard/filepond-plugin-media-preview/blob/master/LICENSE)
 [![npm version](https://badge.fury.io/js/filepond-plugin-media-preview.svg)](https://badge.fury.io/js/filepond-plugin-media-preview)
 
-The Media Preview plugin will kick in automatically when the uploaded file is of type video or audio and render a preview player inside the file item.
+The Media Preview plugin will kick in automatically when the uploaded file is of type video or audio and render a preview player inside the file item. For pdf files it will use the PDF.js native renderer.
 
 <img src="https://github.com/nielsboogaard/filepond-plugin-media-preview/blob/master/demo.gif?raw=true" width="508" alt=""/>
 
@@ -12,7 +12,7 @@ The Media Preview plugin will kick in automatically when the uploaded file is of
 Install using npm:
 
 ```bash
-npm install filepond-plugin-media-preview
+npm install ernestbrandi/filepond-plugin-media-preview
 ```
 
 Then import in your project:
@@ -51,4 +51,4 @@ import "filepond-plugin-media-preview/dist/filepond-plugin-media-preview.min.css
 
 ## Demo
 
-[View the demo](https://nielsboogaard.github.io/filepond-plugin-media-preview/)
+[View the demo](https://ernestbrandi.github.io/filepond-plugin-media-preview/)
