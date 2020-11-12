@@ -69,8 +69,6 @@ export const createMediaView = (_) =>
           new AudioPlayer(root.ref.media, root.ref.audio);
         }
 
-        console.log(root.ref.media);
-
         // determine dimensions and update panel accordingly
         root.ref.media.addEventListener(
           "loadeddata",

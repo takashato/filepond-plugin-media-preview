@@ -10,6 +10,8 @@ const isPreviewableVideo = (file) => /^video/.test(file.type);
 
 const isPreviewableAudio = (file) => /^audio/.test(file.type);
 
+const isPreviewablePdf = (file) => /pdf$/.test(file.type);
+
 ('use strict');
 
 class AudioPlayer {
@@ -136,31 +138,39 @@ const createMediaView = (_) =>
 
       // get item
       const item = root.query('GET_ITEM', { id: props.id });
-      let tagName = isPreviewableAudio(item.file) ? 'audio' : 'video';
 
-      root.ref.media = document.createElement(tagName);
-      root.ref.media.setAttribute('controls', true);
-      root.element.appendChild(root.ref.media);
+      if (isPreviewablePdf(item.file)) {
+        root.ref.media = document.createElement('object');
+        root.ref.media.setAttribute('height', 300);
+        root.ref.media.setAttribute('width', 418);
+        root.element.appendChild(root.ref.media);
+      } else {
+        let tagName = isPreviewableAudio(item.file) ? 'audio' : 'video';
 
-      if (isPreviewableAudio(item.file)) {
-        let docfrag = document.createDocumentFragment();
-        root.ref.audio = [];
-        (root.ref.audio.container = document.createElement('div')),
-          (root.ref.audio.button = document.createElement('span')),
-          (root.ref.audio.timeline = document.createElement('div')),
-          (root.ref.audio.playhead = document.createElement('div'));
+        root.ref.media = document.createElement(tagName);
+        root.ref.media.setAttribute('controls', true);
+        root.element.appendChild(root.ref.media);
 
-        root.ref.audio.container.className = 'audioplayer';
-        root.ref.audio.button.className = 'playpausebtn play';
-        root.ref.audio.timeline.className = 'timeline';
-        root.ref.audio.playhead.className = 'playhead';
+        if (isPreviewableAudio(item.file)) {
+          let docfrag = document.createDocumentFragment();
+          root.ref.audio = [];
+          (root.ref.audio.container = document.createElement('div')),
+            (root.ref.audio.button = document.createElement('span')),
+            (root.ref.audio.timeline = document.createElement('div')),
+            (root.ref.audio.playhead = document.createElement('div'));
 
-        root.ref.audio.timeline.appendChild(root.ref.audio.playhead);
-        root.ref.audio.container.appendChild(root.ref.audio.button);
-        root.ref.audio.container.appendChild(root.ref.audio.timeline);
-        docfrag.appendChild(root.ref.audio.container);
+          root.ref.audio.container.className = 'audioplayer';
+          root.ref.audio.button.className = 'playpausebtn play';
+          root.ref.audio.timeline.className = 'timeline';
+          root.ref.audio.playhead.className = 'playhead';
 
-        root.element.appendChild(docfrag);
+          root.ref.audio.timeline.appendChild(root.ref.audio.playhead);
+          root.ref.audio.container.appendChild(root.ref.audio.button);
+          root.ref.audio.container.appendChild(root.ref.audio.timeline);
+          docfrag.appendChild(root.ref.audio.container);
+
+          root.element.appendChild(docfrag);
+        }
       }
     },
     write: _.utils.createRoute({
@@ -168,14 +178,16 @@ const createMediaView = (_) =>
         const { id } = props;
 
         // get item
-        const item = root.query('GET_ITEM', { id: props.id });
+        const item = root.query('GET_ITEM', { id: id });
         if (!item) return;
 
         let URL = window.URL || window.webkitURL;
         let blob = new Blob([item.file], { type: item.file.type });
 
         root.ref.media.type = item.file.type;
-        root.ref.media.src = URL.createObjectURL(blob);
+        if (isPreviewablePdf(item.file))
+          root.ref.media.data = URL.createObjectURL(blob);
+        else root.ref.media.src = URL.createObjectURL(blob);
 
         // create audio player in case of audio file
         if (isPreviewableAudio(item.file)) {
@@ -186,17 +198,34 @@ const createMediaView = (_) =>
         root.ref.media.addEventListener(
           'loadeddata',
           () => {
-            let height = 75; // default height for audio panel
-            if (isPreviewableVideo(item.file)) {
-              let containerWidth = root.ref.media.offsetWidth;
-              let factor = root.ref.media.videoWidth / containerWidth;
-              height = root.ref.media.videoHeight / factor;
-            }
+            if (
+              isPreviewableVideo(item.file) ||
+              isPreviewableAudio(item.file)
+            ) {
+              let height = 75; // default height for audio panel
+              if (isPreviewableVideo(item.file)) {
+                let containerWidth = root.ref.media.offsetWidth;
+                let factor = root.ref.media.videoWidth / containerWidth;
+                height = root.ref.media.videoHeight / factor;
+              }
 
-            root.dispatch('DID_UPDATE_PANEL_HEIGHT', {
-              id: props.id,
-              height: height,
-            });
+              root.dispatch('DID_UPDATE_PANEL_HEIGHT', {
+                id: id,
+                height: height,
+              });
+            }
+          },
+          false
+        );
+        root.ref.media.addEventListener(
+          'load',
+          () => {
+            if (isPreviewablePdf(item.file)) {
+              root.dispatch('DID_UPDATE_PANEL_HEIGHT', {
+                id: id,
+                height: root.ref.media.scrollHeight,
+              });
+            }
           },
           false
         );
@@ -269,7 +298,9 @@ const plugin = (fpAPI) => {
       if (
         !item ||
         item.archived ||
-        (!isPreviewableVideo(item.file) && !isPreviewableAudio(item.file))
+        (!isPreviewableVideo(item.file) &&
+          !isPreviewablePdf(item.file) &&
+          !isPreviewableAudio(item.file))
       ) {
         return;
       }
@@ -296,6 +327,7 @@ const plugin = (fpAPI) => {
           // don't do anything while not an video or audio file or hidden
           if (
             (!isPreviewableVideo(item.file) &&
+              !isPreviewablePdf(item.file) &&
               !isPreviewableAudio(item.file)) ||
             root.rect.element.hidden
           )
@@ -308,6 +340,7 @@ const plugin = (fpAPI) => {
   // expose plugin
   return {
     options: {
+      allowPdfPreview: [true, Type.BOOLEAN],
       allowVideoPreview: [true, Type.BOOLEAN],
       allowAudioPreview: [true, Type.BOOLEAN],
     },

@@ -1,1 +1,1 @@
-export const isPreviewableAudio = file => /^audio/.test(file.type);
+export const isPreviewableAudio = (file) => /^audio/.test(file.type);

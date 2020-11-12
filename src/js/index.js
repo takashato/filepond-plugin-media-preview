@@ -26,7 +26,6 @@ const plugin = (fpAPI) => {
       const { id } = props;
       const item = query("GET_ITEM", id);
 
-      console.log(item.file.type, !isPreviewablePdf(item.file));
       if (
         !item ||
         item.archived ||
