@@ -1,7 +1,6 @@
 # Media Preview plugin for FilePond (+PDF)
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nielsboogaard/filepond-plugin-media-preview/blob/master/LICENSE)
-[![npm version](https://badge.fury.io/js/filepond-plugin-media-preview.svg)](https://badge.fury.io/js/filepond-plugin-media-preview)
 
 The Media Preview plugin will kick in automatically when the uploaded file is of type video or audio and render a preview player inside the file item. For pdf files it will use the PDF.js native renderer.
 
