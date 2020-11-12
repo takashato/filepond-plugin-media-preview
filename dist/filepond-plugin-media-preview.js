@@ -152,8 +152,7 @@
       tag: 'div',
       ignoreRect: true,
       create: ({ root, props }) => {
-        const { id } = props; // get item
-
+        // get item
         const item = root.query('GET_ITEM', {
           id: props.id,
         });
@@ -161,7 +160,11 @@
         if (isPreviewablePdf(item.file)) {
           root.ref.media = document.createElement('object');
           root.ref.media.setAttribute('height', 300);
-          root.ref.media.setAttribute('width', 418);
+          root.ref.media.setAttribute('width', 320);
+          root.ref.media.setAttribute(
+            'style',
+            'position:absolute;left:0;right:0;margin:auto;'
+          );
           root.element.appendChild(root.ref.media);
         } else {
           let tagName = isPreviewableAudio(item.file) ? 'audio' : 'video';
