@@ -1,6 +1,7 @@
 import { createMediaWrapperView } from "./view/createMediaWrapperView";
 import { isPreviewableVideo } from "./utils/isPreviewableVideo";
 import { isPreviewableAudio } from "./utils/isPreviewableAudio";
+import { isPreviewablePdf } from "./utils/isPreviewablePdf";
 
 /**
  * Media Preview Plugin
@@ -25,10 +26,13 @@ const plugin = (fpAPI) => {
       const { id } = props;
       const item = query("GET_ITEM", id);
 
+      console.log(item.file.type, !isPreviewablePdf(item.file));
       if (
         !item ||
         item.archived ||
-        (!isPreviewableVideo(item.file) && !isPreviewableAudio(item.file))
+        (!isPreviewableVideo(item.file) &&
+          !isPreviewablePdf(item.file) &&
+          !isPreviewableAudio(item.file))
       ) {
         return;
       }
@@ -55,6 +59,7 @@ const plugin = (fpAPI) => {
           // don't do anything while not an video or audio file or hidden
           if (
             (!isPreviewableVideo(item.file) &&
+              !isPreviewablePdf(item.file) &&
               !isPreviewableAudio(item.file)) ||
             root.rect.element.hidden
           )
