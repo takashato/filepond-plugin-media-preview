@@ -7,15 +7,15 @@
 /* eslint-disable */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined'
+  typeof exports === "object" && typeof module !== "undefined"
     ? (module.exports = factory())
-    : typeof define === 'function' && define.amd
+    : typeof define === "function" && define.amd
     ? define(factory)
     : ((global =
-        typeof globalThis !== 'undefined' ? globalThis : global || self),
+        typeof globalThis !== "undefined" ? globalThis : global || self),
       (global.FilePondPluginMediaPreview = factory()));
 })(this, function () {
-  'use strict';
+  "use strict";
 
   const isPreviewableVideo = (file) => /^video/.test(file.type);
 
@@ -23,7 +23,7 @@
 
   const isPreviewablePdf = (file) => /pdf$/.test(file.type);
 
-  ('use strict');
+  ("use strict");
 
   class AudioPlayer {
     constructor(mediaEl, audioElems) {
@@ -40,27 +40,27 @@
 
     registerListeners() {
       this.mediaEl.addEventListener(
-        'timeupdate',
+        "timeupdate",
         this.timeUpdate.bind(this),
         false
       );
       this.mediaEl.addEventListener(
-        'canplaythrough',
+        "canplaythrough",
         () => (this.duration = this.mediaEl.duration),
         false
       );
       this.audioElems.timeline.addEventListener(
-        'click',
+        "click",
         this.timelineClicked.bind(this),
         false
       );
-      this.audioElems.button.addEventListener('click', this.play.bind(this));
+      this.audioElems.button.addEventListener("click", this.play.bind(this));
       this.audioElems.playhead.addEventListener(
-        'mousedown',
+        "mousedown",
         this.mouseDown.bind(this),
         false
       );
-      window.addEventListener('mouseup', this.mouseUp.bind(this), false);
+      window.addEventListener("mouseup", this.mouseUp.bind(this), false);
     }
 
     play() {
@@ -70,17 +70,17 @@
         this.mediaEl.pause();
       }
 
-      this.audioElems.button.classList.toggle('play');
-      this.audioElems.button.classList.toggle('pause');
+      this.audioElems.button.classList.toggle("play");
+      this.audioElems.button.classList.toggle("pause");
     }
 
     timeUpdate() {
       let playPercent = (this.mediaEl.currentTime / this.duration) * 100;
-      this.audioElems.playhead.style.marginLeft = playPercent + '%';
+      this.audioElems.playhead.style.marginLeft = playPercent + "%";
 
       if (this.mediaEl.currentTime === this.duration) {
-        this.audioElems.button.classList.toggle('play');
-        this.audioElems.button.classList.toggle('pause');
+        this.audioElems.button.classList.toggle("play");
+        this.audioElems.button.classList.toggle("pause");
       }
     }
 
@@ -89,16 +89,16 @@
         event.clientX - this.getPosition(this.audioElems.timeline);
 
       if (newMargLeft >= 0 && newMargLeft <= this.timelineWidth) {
-        this.audioElems.playhead.style.marginLeft = newMargLeft + 'px';
+        this.audioElems.playhead.style.marginLeft = newMargLeft + "px";
       }
 
       if (newMargLeft < 0) {
-        this.audioElems.playhead.style.marginLeft = '0px';
+        this.audioElems.playhead.style.marginLeft = "0px";
       }
 
       if (newMargLeft > this.timelineWidth) {
         this.audioElems.playhead.style.marginLeft =
-          this.timelineWidth - 4 + 'px';
+          this.timelineWidth - 4 + "px";
       }
     }
 
@@ -109,23 +109,23 @@
 
     mouseDown() {
       this.onplayhead = true;
-      window.addEventListener('mousemove', this.moveplayheadFn, true);
+      window.addEventListener("mousemove", this.moveplayheadFn, true);
       this.mediaEl.removeEventListener(
-        'timeupdate',
+        "timeupdate",
         this.timeUpdate.bind(this),
         false
       );
     }
 
     mouseUp(event) {
-      window.removeEventListener('mousemove', this.moveplayheadFn, true);
+      window.removeEventListener("mousemove", this.moveplayheadFn, true);
 
       if (this.onplayhead == true) {
         this.moveplayhead(event); // change current time
 
         this.mediaEl.currentTime = this.duration * this.clickPercent(event);
         this.mediaEl.addEventListener(
-          'timeupdate',
+          "timeupdate",
           this.timeUpdate.bind(this),
           false
         );
@@ -148,41 +148,41 @@
 
   const createMediaView = (_) =>
     _.utils.createView({
-      name: 'media-preview',
-      tag: 'div',
+      name: "media-preview",
+      tag: "div",
       ignoreRect: true,
       create: ({ root, props }) => {
         // get item
-        const item = root.query('GET_ITEM', {
+        const item = root.query("GET_ITEM", {
           id: props.id,
         });
 
         if (isPreviewablePdf(item.file)) {
-          root.ref.media = document.createElement('object');
-          root.ref.media.setAttribute('height', 300);
-          root.ref.media.setAttribute('width', 320);
+          root.ref.media = document.createElement("object");
+          root.ref.media.setAttribute("height", 300);
+          root.ref.media.setAttribute("width", 320);
           root.ref.media.setAttribute(
-            'style',
-            'position:absolute;left:0;right:0;margin:auto;'
+            "style",
+            "position:absolute;left:0;right:0;margin:auto;"
           );
           root.element.appendChild(root.ref.media);
         } else {
-          let tagName = isPreviewableAudio(item.file) ? 'audio' : 'video';
+          let tagName = isPreviewableAudio(item.file) ? "audio" : "video";
           root.ref.media = document.createElement(tagName);
-          root.ref.media.setAttribute('controls', true);
+          root.ref.media.setAttribute("controls", true);
           root.element.appendChild(root.ref.media);
 
           if (isPreviewableAudio(item.file)) {
             let docfrag = document.createDocumentFragment();
             root.ref.audio = [];
-            (root.ref.audio.container = document.createElement('div')),
-              (root.ref.audio.button = document.createElement('span')),
-              (root.ref.audio.timeline = document.createElement('div')),
-              (root.ref.audio.playhead = document.createElement('div'));
-            root.ref.audio.container.className = 'audioplayer';
-            root.ref.audio.button.className = 'playpausebtn play';
-            root.ref.audio.timeline.className = 'timeline';
-            root.ref.audio.playhead.className = 'playhead';
+            (root.ref.audio.container = document.createElement("div")),
+              (root.ref.audio.button = document.createElement("span")),
+              (root.ref.audio.timeline = document.createElement("div")),
+              (root.ref.audio.playhead = document.createElement("div"));
+            root.ref.audio.container.className = "audioplayer";
+            root.ref.audio.button.className = "playpausebtn play";
+            root.ref.audio.timeline.className = "timeline";
+            root.ref.audio.playhead.className = "playhead";
             root.ref.audio.timeline.appendChild(root.ref.audio.playhead);
             root.ref.audio.container.appendChild(root.ref.audio.button);
             root.ref.audio.container.appendChild(root.ref.audio.timeline);
@@ -195,7 +195,7 @@
         DID_MEDIA_PREVIEW_LOAD: ({ root, props }) => {
           const { id } = props; // get item
 
-          const item = root.query('GET_ITEM', {
+          const item = root.query("GET_ITEM", {
             id: id,
           });
           if (!item) return;
@@ -215,7 +215,7 @@
           } // determine dimensions and update panel accordingly
 
           root.ref.media.addEventListener(
-            'loadeddata',
+            "loadeddata",
             () => {
               if (
                 isPreviewableVideo(item.file) ||
@@ -229,7 +229,7 @@
                   height = root.ref.media.videoHeight / factor;
                 }
 
-                root.dispatch('DID_UPDATE_PANEL_HEIGHT', {
+                root.dispatch("DID_UPDATE_PANEL_HEIGHT", {
                   id: id,
                   height: height,
                 });
@@ -238,10 +238,10 @@
             false
           );
           root.ref.media.addEventListener(
-            'load',
+            "load",
             () => {
               if (isPreviewablePdf(item.file)) {
-                root.dispatch('DID_UPDATE_PANEL_HEIGHT', {
+                root.dispatch("DID_UPDATE_PANEL_HEIGHT", {
                   id: id,
                   height: root.ref.media.scrollHeight,
                 });
@@ -259,10 +259,10 @@
      */
     const didCreatePreviewContainer = ({ root, props }) => {
       const { id } = props;
-      const item = root.query('GET_ITEM', id);
+      const item = root.query("GET_ITEM", id);
       if (!item) return; // the preview is now ready to be drawn
 
-      root.dispatch('DID_MEDIA_PREVIEW_LOAD', {
+      root.dispatch("DID_MEDIA_PREVIEW_LOAD", {
         id,
       });
     };
@@ -281,7 +281,7 @@
     };
 
     return _.utils.createView({
-      name: 'media-preview-wrapper',
+      name: "media-preview-wrapper",
       create,
       write: _.utils.createRoute({
         // media preview stated
@@ -299,17 +299,17 @@
     const { Type, createRoute } = utils;
     const mediaWrapperView = createMediaWrapperView(fpAPI); // called for each view that is created right after the 'create' method
 
-    addFilter('CREATE_VIEW', (viewAPI) => {
+    addFilter("CREATE_VIEW", (viewAPI) => {
       // get reference to created view
       const { is, view, query } = viewAPI; // only hook up to item view
 
-      if (!is('file')) {
+      if (!is("file")) {
         return;
       } // create the media preview plugin, but only do so if the item is video or audio
 
       const didLoadItem = ({ root, props }) => {
         const { id } = props;
-        const item = query('GET_ITEM', id);
+        const item = query("GET_ITEM", id);
 
         if (
           !item ||
@@ -327,7 +327,7 @@
           })
         ); // now ready
 
-        root.dispatch('DID_MEDIA_PREVIEW_CONTAINER_CREATE', {
+        root.dispatch("DID_MEDIA_PREVIEW_CONTAINER_CREATE", {
           id,
         });
       }; // start writing
@@ -339,9 +339,10 @@
           },
           ({ root, props }) => {
             const { id } = props;
-            const item = query('GET_ITEM', id); // don't do anything while not an video or audio file or hidden
+            const item = query("GET_ITEM", id); // don't do anything while not an video or audio file or hidden
 
             if (
+              !item ||
               (!isPreviewableVideo(item.file) &&
                 !isPreviewablePdf(item.file) &&
                 !isPreviewableAudio(item.file)) ||
@@ -363,11 +364,11 @@
   }; // fire pluginloaded event if running in browser, this allows registering the plugin when using async script tags
 
   const isBrowser =
-    typeof window !== 'undefined' && typeof window.document !== 'undefined';
+    typeof window !== "undefined" && typeof window.document !== "undefined";
 
   if (isBrowser) {
     document.dispatchEvent(
-      new CustomEvent('FilePond:pluginloaded', {
+      new CustomEvent("FilePond:pluginloaded", {
         detail: plugin,
       })
     );
