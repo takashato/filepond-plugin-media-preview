@@ -1,5 +1,5 @@
 /*!
- * FilePondPluginMediaPreview 1.0.7
+ * FilePondPluginMediaPreview 1.0.1
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit undefined for details.
  */
@@ -206,7 +206,9 @@
           root.ref.media.type = item.file.type;
           if (isPreviewablePdf(item.file))
             root.ref.media.data = URL.createObjectURL(blob);
-          else root.ref.media.src = URL.createObjectURL(blob); // create audio player in case of audio file
+          else
+            root.ref.media.src =
+              (item.file.mock && item.file.url) || URL.createObjectURL(blob); // create audio player in case of audio file
 
           if (isPreviewableAudio(item.file)) {
             new AudioPlayer(root.ref.media, root.ref.audio);

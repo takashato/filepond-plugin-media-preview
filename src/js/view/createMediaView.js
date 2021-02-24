@@ -63,7 +63,9 @@ export const createMediaView = (_) =>
         root.ref.media.type = item.file.type;
         if (isPreviewablePdf(item.file))
           root.ref.media.data = URL.createObjectURL(blob);
-        else root.ref.media.src = URL.createObjectURL(blob);
+        else
+          root.ref.media.src =
+            (item.file.mock && item.file.url) || URL.createObjectURL(blob);
 
         // create audio player in case of audio file
         if (isPreviewableAudio(item.file)) {
