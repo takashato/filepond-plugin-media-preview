@@ -1,5 +1,5 @@
 /*!
- * FilePondPluginMediaPreview 1.0.1
+ * FilePondPluginMediaPreview 1.0.2
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit undefined for details.
  */
@@ -186,11 +186,13 @@ const createMediaView = (_) =>
         let blob = new Blob([item.file], { type: item.file.type });
 
         root.ref.media.type = item.file.type;
-        if (isPreviewablePdf(item.file))
-          root.ref.media.data = URL.createObjectURL(blob);
-        else
+        if (isPreviewablePdf(item.file)) {
+          root.ref.media.data =
+            (item.file.mock && item.file.url) || URL.createObjectURL(blob);
+        } else {
           root.ref.media.src =
             (item.file.mock && item.file.url) || URL.createObjectURL(blob);
+        }
 
         // create audio player in case of audio file
         if (isPreviewableAudio(item.file)) {
