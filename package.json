@@ -4,9 +4,9 @@
   "description": "Media preview Plugin for FilePond",
   "license": "MIT",
   "author": {
-    "name": "Niels Boogaard & Ernest Brandi"
+    "name": "Niels Boogaard & Ernest Brandi & Takashato"
   },
-  "repository": "ernestbrandi/filepond-plugin-media-preview",
+  "repository": "takashato/filepond-plugin-media-preview",
   "main": "dist/filepond-plugin-media-preview.js",
   "browser": "dist/filepond-plugin-media-preview.js",
   "module": "dist/filepond-plugin-media-preview.esm.js",
@@ -24,20 +24,20 @@
     "build": "npm run scripts | npm run styles | npm run copy",
     "scripts": "npx rollup -c",
     "styles": "npm run styles:pretty && npm run styles:nano",
-    "styles:pretty": "cat src/css/* | npx node-sass | npx postcss --no-map --use autoprefixer | npx prettier --single-quote --parser css | node banner-cli.js FilePondPluginmediaPreview > dist/filepond-plugin-media-preview.css",
-    "styles:nano": "cat src/css/* | npx node-sass | npx postcss --no-map --use autoprefixer --use cssnano | node banner-cli.js FilePondPluginmediaPreview > dist/filepond-plugin-media-preview.min.css",
+    "styles:pretty": "cat src/css/* | npx sass --stdin | npx postcss -u --no-map --use autoprefixer | npx prettier --single-quote --parser css | node banner-cli.js FilePondPluginmediaPreview > dist/filepond-plugin-media-preview.css",
+    "styles:nano": "cat src/css/* | npx sass --stdin | npx postcss -u --no-map --use autoprefixer --use cssnano | node banner-cli.js FilePondPluginmediaPreview > dist/filepond-plugin-media-preview.min.css",
     "copy": "cp -r src/images/ dist/images"
   },
   "peerDependencies": {
-    "filepond": ">=4.x <5.x"
+    "filepond": "^4.32.5"
   },
   "devDependencies": {
     "@babel/core": "^7.11.4",
     "@babel/preset-env": "^7.11.0",
     "autoprefixer": "^9.8.6",
     "cssnano": "^4.1.10",
-    "node-sass": "^4.14.1",
-    "postcss-cli": "7.1.1",
+    "sass": "^1.83.0",
+    "postcss-cli": "^11.0.0",
     "prettier": "^2.1.1",
     "rollup": "^2.26.8",
     "rollup-plugin-babel": "^4.4.0",

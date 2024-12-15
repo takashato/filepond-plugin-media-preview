@@ -359,4 +359,4 @@ if (isBrowser) {
   );
 }
 
-export default plugin;
+export { plugin as default };
