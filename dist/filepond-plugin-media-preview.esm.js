@@ -187,8 +187,16 @@ const createMediaView = (_) =>
 
         root.ref.media.type = item.file.type;
         if (isPreviewablePdf(item.file)) {
-          root.ref.media.data =
-            (item.file.mock && item.file.url) || URL.createObjectURL(blob);
+          if (
+            item.file.source &&
+            (item.file.source.startsWith('https://') ||
+              item.file.source.startsWith('http://') ||
+              item.file.source.startsWith('blob:'))
+          ) {
+            root.ref.media.data = item.file.source;
+          } else {
+            root.ref.media.data = URL.createObjectURL(blob);
+          }
         } else {
           root.ref.media.src =
             (item.file.mock && item.file.url) || URL.createObjectURL(blob);
