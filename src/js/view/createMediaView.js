@@ -63,7 +63,9 @@ export const createMediaView = (_) =>
                 root.ref.media.type = item.file.type;
                 if (isPreviewablePdf(item.file)) {
                     if (item.source
-                        && (item.source.startsWith("https://")
+                        && typeof item.source === "string"
+                        && (
+                            item.source.startsWith("https://")
                             || item.source.startsWith("http://")
                             || item.source.startsWith("blob:")
                         )

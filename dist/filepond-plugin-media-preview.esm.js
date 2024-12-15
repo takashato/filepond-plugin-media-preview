@@ -1,5 +1,5 @@
 /*!
- * FilePondPluginMediaPreview 1.0.3
+ * FilePondPluginMediaPreview 1.0.5
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit undefined for details.
  */
@@ -189,6 +189,7 @@ const createMediaView = (_) =>
         if (isPreviewablePdf(item.file)) {
           if (
             item.source &&
+            typeof item.source === 'string' &&
             (item.source.startsWith('https://') ||
               item.source.startsWith('http://') ||
               item.source.startsWith('blob:'))
