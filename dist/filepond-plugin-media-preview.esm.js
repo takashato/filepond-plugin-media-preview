@@ -1,5 +1,5 @@
 /*!
- * FilePondPluginMediaPreview 1.0.2
+ * FilePondPluginMediaPreview 1.0.3
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit undefined for details.
  */
@@ -188,12 +188,12 @@ const createMediaView = (_) =>
         root.ref.media.type = item.file.type;
         if (isPreviewablePdf(item.file)) {
           if (
-            item.file.source &&
-            (item.file.source.startsWith('https://') ||
-              item.file.source.startsWith('http://') ||
-              item.file.source.startsWith('blob:'))
+            item.source &&
+            (item.source.startsWith('https://') ||
+              item.source.startsWith('http://') ||
+              item.source.startsWith('blob:'))
           ) {
-            root.ref.media.data = item.file.source;
+            root.ref.media.data = item.source;
           } else {
             root.ref.media.data = URL.createObjectURL(blob);
           }
