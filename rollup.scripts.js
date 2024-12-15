@@ -7,8 +7,11 @@ const banner = require('./banner');
 const createBuild = (options) => {
 	const { format, id, name, minify = false, transpile = false } = options;
 
+	// remove @username from name (@takashato/filepond-plugin-media-preview -> filepond-plugin-media-preview)
+	const nameParts = name.split('/');
+
 	// get filename
-	const filename = ['dist/', name];
+	const filename = ['dist/', nameParts[nameParts.length - 1]];
 	if (format === 'es') {
 		filename.push('.esm');
 	}

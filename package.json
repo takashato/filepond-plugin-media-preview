@@ -1,5 +1,5 @@
 {
-  "name": "filepond-plugin-media-preview",
+  "name": "@takashato/filepond-plugin-media-preview",
   "version": "1.0.1",
   "description": "Media preview Plugin for FilePond",
   "license": "MIT",
